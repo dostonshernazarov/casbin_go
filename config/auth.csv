@@ -1,0 +1,2 @@
+p, admin, /users, POST
+p, user, /users, POST
