@@ -1,0 +1,78 @@
+definitions:
+  v1.UserReq:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: API for CV Maker
+  title: Welcome To CV Maker API
+paths:
+  /v1/media/:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Api for upload a new photo
+      parameters:
+      - description: createUserModel
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Upload Photo
+      tags:
+      - media
+  /v1/users/:
+    post:
+      consumes:
+      - application/json
+      description: Api for creating a new user
+      parameters:
+      - description: createUserModel
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/v1.UserReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: CreateUser
+      tags:
+      - user
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

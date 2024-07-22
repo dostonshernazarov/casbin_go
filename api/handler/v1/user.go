@@ -3,12 +3,21 @@ package v1
 import (
 	"context"
 	"encoding/json"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
 
 type UserReq struct {
+	Name     string
+	Role     string
+	Password string
+}
+
+type UserRes struct {
+	ID       string
 	Name     string
 	Role     string
 	Password string
@@ -50,6 +59,41 @@ func (h handler) CreatUser(c *gin.Context) {
 		})
 	}
 
-	rdb.Set(context.Background(), user.Name, byteUser, 0)
+	id := uuid.NewString()
+
+	rdb.Set(context.Background(), id, byteUser, 0)
+
+	c.JSON(201, &UserRes{
+		ID:       id,
+		Name:     user.Name,
+		Role:     user.Role,
+		Password: user.Password,
+	})
+
+}
+
+// @Summary Upload Photo
+// @Description Api for upload a new photo
+// @Tags media
+// @Accept multipart/form-data
+// @Param file formData file true "createUserModel"
+// @Success 200 {object} string
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Router /v1/media/ [post]
+func (h handler) UploadMedia(c *gin.Context) {
+
+	header, _ := c.FormFile("file")
+
+	url := filepath.Join("media", header.Filename)
+
+	err := c.SaveUploadedFile(header, url)
+	if err != nil {
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": url,
+	})
 
 }

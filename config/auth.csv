@@ -1,2 +1,3 @@
-p, admin, /users, POST
-p, user, /users, POST
+p, unauthorized, /v1/swagger/*,  GET
+
+p, user, /v1/users,
